@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block header %}
+Timerboard
+{% endblock %}
+
+{% block description %}
+View Timers
+{% endblock %}
+
+{% block content %}
+<div class="box">
+    <div class="box-body">
+      <table class="table">
+        <thead>
+          <th scope="col">Countdown</th>
+          <th scope="col">Date</th>
+          <th scope="col">Name</th>
+          <th scope="col">Created By</th>
+          <th scope="col">Groups</th>
+          <th scope="col">Actions</th>
+        </thead>
+        <tbody>
+          {% for evetimer in timers %}
+          <td>1d 22h 5m</td>
+          <td>{{evetimer.timer.isoformat}}
+          <td>{{evetimer.name}}</td>
+          <td>{{evetimer.user.evetoken_set.all.0.get_primary_token.character.name}}
+          <td>{{evetimer.groups.all}}
+          <td>None</td>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+</div>
+{% endblock %}
