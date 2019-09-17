@@ -19,7 +19,6 @@ def add_timer(request):
                 timer=form.cleaned_data['timer'],
                 user=request.user,
                 type=type,
-                groups=form.cleaned_data['groups']
             ).save()
             messages.success(request, 'Succesfully added timer: %s' % form.cleaned_data['name'])
             return redirect('django-eveonline-timerboard-view')
@@ -36,10 +35,8 @@ def remove_timer(request, pk):
       
 
 def view_timerboard(request):
-    timers = EveTimer.objects.filter(groups__in=request.user.groups.all(), timer__gte=datetime.utcnow())
-    timers = timers.union(EveTimer.objects.filter(groups=None), timer__gte=datetime.utcnow())
+    timers = EveTimer.objects.filter(timer__gte=datetime.utcnow())
     context = {
-        'groups': request.user.groups.all,
         'timers': timers
     }
     return render(request, 'django_eveonline_timerboard/adminlte/timerboard.html', context)

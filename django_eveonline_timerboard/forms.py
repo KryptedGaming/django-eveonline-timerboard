@@ -4,4 +4,4 @@ from .models import EveTimer
 class EveTimerForm(ModelForm):
     class Meta:
         model = EveTimer 
-        fields = ['name', 'type', 'timer', 'groups']
+        fields = ['name', 'type', 'timer']

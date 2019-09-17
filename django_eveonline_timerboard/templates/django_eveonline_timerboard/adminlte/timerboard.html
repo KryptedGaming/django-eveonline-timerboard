@@ -2,35 +2,136 @@
 
 {% block header %}
 Timerboard
+<button class="pull-right btn btn-success" data-toggle="modal" data-target="#addTimerModal">Add Timer</button>
 {% endblock %}
 
 {% block description %}
 View Timers
+
 {% endblock %}
 
 {% block content %}
+
 <div class="box">
     <div class="box-body">
-      <table class="table">
+      <table class="table table-bordered table-hover text-center">
         <thead>
           <th scope="col">Countdown</th>
           <th scope="col">Date</th>
-          <th scope="col">Name</th>
-          <th scope="col">Created By</th>
-          <th scope="col">Groups</th>
+          <th scope="col">Timer</th>
+          <th class="hidden-xs" scope="col">Name</th>
+          <th class="hidden-xs" scope="col">Created By</th>
           <th scope="col">Actions</th>
         </thead>
         <tbody>
           {% for evetimer in timers %}
-          <td>1d 22h 5m</td>
-          <td>{{evetimer.timer.isoformat}}
-          <td>{{evetimer.name}}</td>
-          <td>{{evetimer.user.evetoken_set.all.0.get_primary_token.character.name}}
-          <td>{{evetimer.groups.all}}
-          <td>None</td>
+          <tr>
+          <td data-order="{{evetimer.timer}}" class="col-lg-2 col-xs-2">
+            <div id="{{evetimer.pk}}" class="countdown">
+                  <p class="date" hidden>{{evetimer.timer.isoformat}}</p>
+                  <p class="counter"></p>
+            </div>
+          </td>
+          <td class="col-lg-2 col-xs-3">{{evetimer.timer |date:'m-d-Y'}}</td>
+          <td class="col-lg-2 col-xs-3">{{evetimer.timer |date:'H:i:s'}}</td>
+          <td class="col-lg-4 hidden-xs">{{evetimer.name}}</td>
+          <td class="col-lg-2 hidden-xs">{{evetimer.user.evetoken_set.all.0.get_primary_token.character.name}}
+          <td class="col-lg-2 col-xs-1 text-center"><a href="{% url 'django-eveonline-timerboard-timer-remove' evetimer.pk %}"><i class="fa fa-fw fa-times text-danger"></i></a></td>
+          </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
 </div>
+
+
+<div class="modal fade col-md-12" id="addTimerModal" data-backdrop="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Create Timer</h4>
+        </div>
+        <div class="modal-body">
+          <form method="POST">
+          {% csrf_token %}
+            <div class="form-group">
+              <label for="exampleFormControlInput1">Identifier</label>
+              <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="P2 M1 - Final Timer">
+            </div>
+            <div class="form-group">
+              <label for="type">Type</label>
+              <select class="form-control" id="type">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="days">Days</label>
+              <input class="form-control" id="days" type="number" value="0">
+              <br>
+              <label max="24" min="0" for="hours">Hours</label>
+              <input class="form-control" id="hours" type="number" value="0">
+              <br>
+              <label max="60" min="0" for="minutes">Minutes</label>
+              <input class="form-control" id="minutes" type="number" value="0">
+              <br>
+              <label max="60" min="0" for="seconds">Seconds</label>
+              <input class="form-control" id="seconds" type="number" value="0">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success" data-dismiss="modal">Submit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+setInterval(function() {
+  var countdowns = document.getElementsByClassName('countdown')
+  for(i=0; i<countdowns.length; i++) {
+    // pull date
+    var elements = countdowns[i].getElementsByTagName('*')
+    var date = new Date(elements[0].innerText)
+    var now = new Date().getTime()
+    var distance = date - now
+    // calculate times
+    sign = Math.sign(distance)
+    distance = Math.abs(distance)
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    // display result
+    elements[1].innerHTML = (sign < 0 ? "-" : "") + days + "d " + hours + "h "+ minutes + "m " + seconds + "s ";
+  }
+}, 1000);
+
+
+</script>
+
+<script>
+$(function () {
+    $('table').DataTable({
+      'paging'      : false,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : false,
+      'autoWidth'   : false,
+      'order' : [[ 1, 'asc' ]],
+      'columnDefs' : [
+        { 'orderable' : false, 'targets' : 0 }
+      ]
+    })
+ })
+</script>
 {% endblock %}
