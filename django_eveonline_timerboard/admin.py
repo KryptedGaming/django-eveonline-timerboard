@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .models import EveTimer
+from .models import EveTimer, EveTimerType
 
-admin.site.register(EveTimer)
+admin.site.register(EveTimerType)
