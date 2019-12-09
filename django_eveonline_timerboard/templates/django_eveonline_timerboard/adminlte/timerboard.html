@@ -19,9 +19,7 @@ View Timers
                 <th scope="col">Countdown</th>
                 <th class="hidden-xs" scope="col">Date</th>
                 <th class="hidden-xs" scope="col">Timer</th>
-                <th scope="col">Type</th>
                 <th class="hidden-xs" scope="col">Name</th>
-                <th scope="col">Created By</th>
                 <th class="hidden-xs" scope="col">Actions</th>
             </thead>
             <tbody>
@@ -35,11 +33,7 @@ View Timers
                     </td>
                     <td class="col-lg-2 hidden-xs">{{evetimer.timer |date:'m-d-Y'}}</td>
                     <td class="col-lg-2 hidden-xs">{{evetimer.timer |date:'H:i:s'}}</td>
-                    <td class="col-lg-2 col-xs-4">
-                        <span class="label label-{{evetimer.type.color}}">{{evetimer.type}}</span>
-                    </td>
-                    <td class="col-lg-4 hidden-xs">{{evetimer.name}}</td>
-                    <td class="col-lg-2 col-xs-4">{{evetimer.user.evetoken_set.all.0.get_primary_token.character.name}}
+                    <td class="col-lg-4 hidden-xs"><span class="label label-{{evetimer.type.color}}">{{evetimer.type.name}}</span> {{evetimer.name}}</td>
                     <td class="col-lg-2 hidden-xs text-center"><a
                             href="{% url 'django-eveonline-timerboard-timer-remove' evetimer.pk %}"><i
                                 class="fa fa-fw fa-times text-danger"></i></a></td>
