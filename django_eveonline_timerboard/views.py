@@ -3,7 +3,10 @@ from django.contrib import messages
 from .forms import EveTimerForm
 from .models import EveTimer, EveTimerType
 from datetime import datetime, timedelta 
+from django.contrib.auth.decorators import login_required, permission_required
 
+@login_required
+@permission_required('django_eveonline_timerboard.add_evetimer', raise_exception=True)
 def add_timer(request):
     if request.method == "POST":
         form = EveTimerForm(request.POST)
@@ -23,11 +26,15 @@ def add_timer(request):
             return redirect('django-eveonline-timerboard-view')
 
 
+@login_required
+@permission_required('django_eveonline_timerboard.delete_evetimer', raise_exception=True)
 def remove_timer(request, pk):
     EveTimer.objects.get(pk=pk).delete()
     return redirect('django-eveonline-timerboard-view')
       
 
+@login_required
+@permission_required('django_eveonline_timerboard.view_evetimer', raise_exception=True)
 def view_timerboard(request):
     timers = EveTimer.objects.filter(timer__gte=datetime.utcnow())
     context = {
