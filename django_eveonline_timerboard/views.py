@@ -3,6 +3,7 @@ from django.contrib import messages
 from .forms import EveTimerForm
 from .models import EveTimer, EveTimerType
 from datetime import datetime, timedelta 
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required, permission_required
 
 @login_required
@@ -36,7 +37,7 @@ def remove_timer(request, pk):
 @login_required
 @permission_required('django_eveonline_timerboard.view_evetimer', raise_exception=True)
 def view_timerboard(request):
-    timers = EveTimer.objects.filter(timer__gte=datetime.utcnow())
+    timers = EveTimer.objects.filter(timer__gte=timezone.now())
     context = {
         'timers': timers,
         'types': EveTimerType.objects.all(),

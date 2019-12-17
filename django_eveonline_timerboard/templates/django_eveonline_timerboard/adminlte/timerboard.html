@@ -19,6 +19,7 @@ View Timers
         <table class="table table-bordered table-hover text-center">
             <thead>
                 <th scope="col">Countdown</th>
+                <th scope="col">Type</th>
                 <th class="hidden-xs" scope="col">Date</th>
                 <th class="hidden-xs" scope="col">Timer</th>
                 <th class="hidden-xs" scope="col">Name</th>
@@ -27,19 +28,20 @@ View Timers
             <tbody>
                 {% for evetimer in timers %}
                 <tr>
-                    <td data-order="{{evetimer.timer}}" class="col-lg-2 col-xs-4">
+                    <td data-order="{{evetimer.timer}}" class="col-lg-2 col-xs-6">
                         <div id="{{evetimer.pk}}" class="countdown">
                             <p class="date" hidden>{{evetimer.timer.isoformat}}</p>
                             <p class="counter"><i class="fa fa-spinner fa-spin"></i></p>
                         </div>
                     </td>
-                    <td class="col-lg-2 hidden-xs">{{evetimer.timer |date:'m-d-Y'}}</td>
-                    <td class="col-lg-2 hidden-xs">{{evetimer.timer |date:'H:i:s'}}</td>
-                    <td class="col-lg-4 hidden-xs"><span class="label label-{{evetimer.type.color}}">{{evetimer.type.name}}</span> {{evetimer.name}}</td>
+                    <td class="col-lg-2 col-xs-6"><span class="label label-{{evetimer.type.color}}">{{evetimer.type.name}}</span></td>
+                    <td class="col-lg-1 hidden-xs">{{evetimer.timer |date:'m-d-Y'}}</td>
+                    <td class="col-lg-1 hidden-xs">{{evetimer.timer |date:'H:i:s'}}</td>
+                    <td class="col-lg-2 hidden-xs">{{evetimer.name}}</td>
                     <td class="col-lg-2 hidden-xs text-center">
                     {% if perms.django_eveonline_timerboard.delete_evetimer %}
-                        <a href="{% url 'django-eveonline-timerboard-timer-remove' evetimer.pk %}">
-                            <i class="fa fa-fw fa-times text-danger" ></i>
+                        <a class="btn btn-danger btn-block" href="{% url 'django-eveonline-timerboard-timer-remove' evetimer.pk %}">
+                            <i class="fa fa-times text-center"></i>
                         </a>
                     {% endif %}
                     </td>
