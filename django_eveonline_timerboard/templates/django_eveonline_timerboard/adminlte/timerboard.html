@@ -1,49 +1,46 @@
 {% extends "base.html" %}
 
-{% block header %}
+{% block title %}
 Timerboard
 {% if perms.django_eveonline_timerboard.add_evetimer %}
 <button class="pull-right btn btn-success" data-toggle="modal" data-target="#addTimerModal">Add Timer</button>
 {% endif %}
 {% endblock %}
 
-{% block description %}
-View Timers
-
-{% endblock %}
-
 {% block content %}
 
-<div class="box">
-    <div class="box-body">
-        <table class="table table-bordered table-hover text-center">
+<div class="card">
+    <div class="card-body">
+        <table class="table table-bordered table-hover">
             <thead>
                 <th scope="col">Countdown</th>
-                <th scope="col">Type</th>
-                <th class="hidden-xs" scope="col">Date</th>
-                <th class="hidden-xs" scope="col">Timer</th>
-                <th class="hidden-xs" scope="col">Name</th>
-                <th class="hidden-xs" scope="col">Actions</th>
+                <th scope="col" class="d-none d-lg-table-cell">Timer</th>
+                <th scope="col" class="d-none d-lg-table-cell">Name</th>
+                <th scope="col">Actions</th>
             </thead>
             <tbody>
                 {% for evetimer in timers %}
                 <tr>
-                    <td data-order="{{evetimer.timer}}" class="col-lg-2 col-xs-6">
+                    <!-- Countdown -->
+                    <td data-order="{{evetimer.timer}}">
                         <div id="{{evetimer.pk}}" class="countdown">
                             <p class="date" hidden>{{evetimer.timer.isoformat}}</p>
                             <p class="counter"><i class="fa fa-spinner fa-spin"></i></p>
                         </div>
                     </td>
-                    <td class="col-lg-2 col-xs-6"><span class="label label-{{evetimer.type.color}}">{{evetimer.type.name}}</span></td>
-                    <td class="col-lg-1 hidden-xs">{{evetimer.timer |date:'Y-m-d'}}</td>
-                    <td class="col-lg-1 hidden-xs">{{evetimer.timer |date:'H:i:s'}}</td>
-                    <td class="col-lg-2 hidden-xs">{{evetimer.name}}</td>
-                    <td class="col-lg-2 hidden-xs text-center">
-                    {% if perms.django_eveonline_timerboard.delete_evetimer %}
-                        <a class="btn btn-danger btn-block" href="{% url 'django-eveonline-timerboard-timer-remove' evetimer.pk %}">
-                            <i class="fa fa-times text-center"></i>
-                        </a>
-                    {% endif %}
+                    <!-- Timer -->
+                    <td class="d-none d-lg-table-cell">
+                        <p>{{evetimer.timer |date:'H:i:s'}}</p>
+                    </td>
+                    <!-- Name -->
+                    <td class="d-none d-lg-table-cell">
+                        {{evetimer.name}}
+                    </td>
+                    <!-- Action -->
+                    <td>
+                    {% include 'django_eveonline_timerboard/adminlte/components/timer_button.html' %} 
+                    {% include 'django_eveonline_timerboard/adminlte/components/timer_modal.html' %} 
+                    
                     </td>
                     
                 </tr>
